@@ -17,22 +17,38 @@ public class Vector3D {
 		this.z += v2.z;
 	}
 	
+	public static Vector3D add(Vector3D v1, Vector3D v2) {
+		Vector3D result = new Vector3D (v1.x + v2.x, 
+										v1.y + v2.y, 
+										v1.z + v2.z);
+		
+		return result;
+	}
+	
 	public void sub(Vector3D v2) {
 		this.x -= v2.x;
 		this.y -= v2.y;
 		this.z -= v2.z;
 	}
 	
-	public float dot(Vector3D v2) {
-		return (this.x * v2.x) + (this.y * v2.y) + (this.z * v2.z);
+	public static Vector3D sub(Vector3D v1, Vector3D v2) {
+		Vector3D result = new Vector3D(v1.x - v2.x,
+									  v1.y - v2.y,
+									  v1.z - v2.z);
+		
+		return result;
 	}
 	
-	public float[] cross(Vector3D v2) {
+	public static float dot(Vector3D v1, Vector3D v2) {
+		return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+	}
+	
+	public static float[] cross(Vector3D v1, Vector3D v2) {
 		float[] resultado = new float[3];
 		
-		resultado[0] = this.y * v2.z - this.z * v2.y;
-	    resultado[1] = this.z * v2.x - this.x * v2.z;
-	    resultado[2] = this.x * v2.y - this.y * v2.x;
+		resultado[0] = v1.y * v2.z - v1.z * v2.y;
+	    resultado[1] = v1.z * v2.x - v1.x * v2.z;
+	    resultado[2] = v1.x * v2.y - v1.y * v2.x;
 		
 		return resultado;
 	}

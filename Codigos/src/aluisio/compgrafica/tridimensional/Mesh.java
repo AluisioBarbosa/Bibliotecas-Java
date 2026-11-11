@@ -1,4 +1,4 @@
-	package aluisio.compgrafica.tridimensional;
+package aluisio.compgrafica.tridimensional;
 
 import java.io.File;
 import java.io.FileNotFoundException;

@@ -96,15 +96,16 @@ public class Render implements GLEventListener {
         gl.glLoadIdentity();
         
         
+        
         // só da pra ver a translação no eixo Z se tiver essa bomba aqui, resolver depois
         //gl.glRotated(30, 1, 0, 0);
         //gl.glRotated(30, 0, 1, 0);
        
         if (aspectRatio >= 1.0) {
-            gl.glOrtho(-10 * aspectRatio, 10 * aspectRatio, -10, 10, -100.0, 100.0);
+            gl.glOrtho(-25 * aspectRatio, 25 * aspectRatio, -25, 25, -100.0, 100.0);
         } 
         else{
-            gl.glOrtho(-10, 10, -10 / aspectRatio, 10 / aspectRatio, -100.0, 100.0);
+            gl.glOrtho(-25, 25, -25 / aspectRatio, 25 / aspectRatio, -100.0, 100.0);
         }
         
         gl.glMatrixMode(GL2.GL_MODELVIEW);
@@ -129,7 +130,7 @@ public class Render implements GLEventListener {
         if (keyboard.teclaPressionada(KeyEvent.VK_NUMPAD5)) Transformacoes.rotate(vertices, -10.0f, new Vector3D(1.0f, 0.0f, 0.0f));
         
         // Esquerda Direita
-        if (keyboard.teclaPressionada(KeyEvent.VK_NUMPAD6))  Transformacoes.rotate(vertices, 2.0f, new Vector3D(0.0f, 1.0f, 0.0f));
+        if (keyboard.teclaPressionada(KeyEvent.VK_NUMPAD6)) Transformacoes.rotate(vertices, 2.0f, new Vector3D(0.0f, 1.0f, 0.0f));
         if (keyboard.teclaPressionada(KeyEvent.VK_NUMPAD4)) Transformacoes.rotate(vertices, -2.0f, new Vector3D(0.0f, 1.0f, 0.0f));
         
         // Proprio eixo
