@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import com.jogamp.opengl.GL2;
 import com.jogamp.opengl.GLAutoDrawable;
 import com.jogamp.opengl.GLEventListener;
+import com.jogamp.opengl.glu.GLU;
 
 import aluisio.codigos.KeyboardManager;
+import aluisio.compgrafica.tridimensional.Camera;
 import aluisio.compgrafica.tridimensional.Face;
 import aluisio.compgrafica.tridimensional.Mesh;
 import aluisio.compgrafica.tridimensional.Ponto3D;
@@ -21,12 +23,14 @@ public class Render implements GLEventListener {
 	private int width;
 	private KeyboardManager keyboard;
 	private Mesh mesh;
+	private Camera camera; 
 
 	public Render(KeyboardManager keyboard) {
 		this.gl = null;
 		this.keyboard = keyboard;
 		this.mesh = new Mesh();
 		this.mesh.criarMesh("OBJ\\Caveira.obj");
+		this.camera = new Camera(new Vector3D(0.0f, 0.0f, 40.0f), new Vector3D(0.0f, 0.0f, 0.0f), new Vector3D(0.0f, 1.0f, 0.0f));
 	}
 
 	@Override
@@ -41,7 +45,13 @@ public class Render implements GLEventListener {
     	processarTeclas();
         gl = drawable.getGL().getGL2();
         gl.glClear(GL2.GL_COLOR_BUFFER_BIT | GL2.GL_DEPTH_BUFFER_BIT);       
+        
+        gl.glMatrixMode(GL2.GL_PROJECTION);
         gl.glLoadIdentity();
+        float aspectRatio = (float) width / height;
+        GLU glu = new GLU();
+        glu.gluPerspective(60.0f, aspectRatio, 0.1f, 1000.0f);
+        camera.setModeloVisualizacao(gl);
         
         gl.glLineWidth(2.0f);
         gl.glColor3f(0.0f, 1.0f, 0.6f);
@@ -88,27 +98,7 @@ public class Render implements GLEventListener {
         this.width = width;
         this.height = height;
         
-        double aspectRatio = (double) width / height;
-        
         gl.glViewport(0, 0, width, height);
-        
-        gl.glMatrixMode(GL2.GL_PROJECTION);
-        gl.glLoadIdentity();
-        
-        
-        
-        // só da pra ver a translação no eixo Z se tiver essa bomba aqui, resolver depois
-        //gl.glRotated(30, 1, 0, 0);
-        //gl.glRotated(30, 0, 1, 0);
-       
-        if (aspectRatio >= 1.0) {
-            gl.glOrtho(-25 * aspectRatio, 25 * aspectRatio, -25, 25, -100.0, 100.0);
-        } 
-        else{
-            gl.glOrtho(-25, 25, -25 / aspectRatio, 25 / aspectRatio, -100.0, 100.0);
-        }
-        
-        gl.glMatrixMode(GL2.GL_MODELVIEW);
     }
     
     private void processarTeclas() {
@@ -117,6 +107,42 @@ public class Render implements GLEventListener {
         }
         
         ArrayList<Ponto3D> vertices = mesh.getVertices();
+        
+        
+        float translacaoCamera = 0.5f;
+        float rotacaoCamera = 2.0f;
+
+        if (keyboard.teclaPressionada(KeyEvent.VK_Z)) {
+            if (keyboard.teclaPressionada(KeyEvent.VK_SHIFT) || keyboard.teclaPressionada(KeyEvent.VK_CAPS_LOCK)) {
+                camera.slide(0, 0, translacaoCamera);
+            } else {
+                camera.slide(0, 0, -translacaoCamera);
+            }
+        }
+
+        if (keyboard.teclaPressionada(KeyEvent.VK_P)) {
+            if (keyboard.teclaPressionada(KeyEvent.VK_SHIFT)) {
+                camera.pitch(-rotacaoCamera);
+            } else {
+                camera.pitch(rotacaoCamera);
+            }
+        }
+
+        if (keyboard.teclaPressionada(KeyEvent.VK_R)) {
+            if (keyboard.teclaPressionada(KeyEvent.VK_SHIFT)) {
+                camera.roll(-rotacaoCamera);
+            } else {
+                camera.roll(rotacaoCamera);
+            }
+        }
+
+        if (keyboard.teclaPressionada(KeyEvent.VK_Y)) {
+            if (keyboard.teclaPressionada(KeyEvent.VK_SHIFT)) {
+                camera.yaw(-rotacaoCamera);
+            } else {
+                camera.yaw(rotacaoCamera);
+            }
+        }
 
         if (keyboard.teclaPressionada(KeyEvent.VK_D)) Transformacoes.translate(vertices, 0.05f, 0, 0);
         if (keyboard.teclaPressionada(KeyEvent.VK_A)) Transformacoes.translate(vertices, -0.05f, 0, 0);
@@ -145,9 +171,9 @@ public class Render implements GLEventListener {
             Transformacoes.scale(vertices, 0.98f);
         }
         
-        if(keyboard.teclaPressionada(KeyEvent.VK_Z)) {
+        if(keyboard.teclaPressionada(KeyEvent.VK_M)) {
         	// tem que resetar manualmente pq o joptionpane buga o listener
-        	keyboard.resetarTecla(KeyEvent.VK_Z);
+        	keyboard.resetarTecla(KeyEvent.VK_M);
         	String caminho = javax.swing.JOptionPane.showInputDialog("Digite o nome do arquivo para abrir");
         	caminho = "OBJ\\" + caminho;
         	
